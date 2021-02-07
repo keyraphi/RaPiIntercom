@@ -12,4 +12,6 @@ The python dependecies are managed using pipenv. Make sure to install pipenv fir
 Then install all python dependencies using
 `pipenv install`
 See the `Pipenv` file to see all dependencies.
+If you want to install the development dependencies (formatter etc.) run:
+`pipenv install --dev`
 
