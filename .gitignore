@@ -155,6 +155,9 @@ dmypy.json
 Session.vim
 Sessionx.vim
 
+# coc
+.vim/*
+
 # Temporary
 .netrwhist
 *~
