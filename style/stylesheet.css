@@ -1,0 +1,13 @@
+QMainWindow#main {
+	background-color: gray;
+}
+
+QMenuBar {
+	font-size: 48px;
+	background-color: transparent;
+}
+
+QMenu {
+	font-size: 40px;
+	background-color: red;
+}

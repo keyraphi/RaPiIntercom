@@ -9,7 +9,8 @@ import time
 
 from PySide2.QtCore import QTimer
 from PySide2.QtGui import QImage, QPixmap
-from PySide2.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QLabel, QHBoxLayout
+from PySide2.QtWidgets import (QApplication, QHBoxLayout, QLabel, QMainWindow,
+                               QMenuBar, QVBoxLayout, QWidget, QAction)
 
 from image_widget import ImageWidget
 
@@ -19,10 +20,14 @@ class IntercomUI(QMainWindow):
 
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.title = "Load image in PySide2"
-        self.setWindowTitle(self.title)
+        self.setObjectName("main")
 
-        self.setStyleSheet("background-color:gray")
+        # TODO find out classes and create reasonably pretty css file
+        with open("style/stylesheet.css", "r") as f:
+            style_sheet = f.read()
+
+        self.setStyleSheet(style_sheet)
+
         self.show_start_screen(2000)
 
         # fullscreen
@@ -36,11 +41,6 @@ class IntercomUI(QMainWindow):
             time_ms:
                 Number of miliseconds to actually show the splash-screen
         """
-        # TODO show start screen
-        print("Trace: Start-screen start", time.time())
-        # label = QLabel(self)
-        # pixmap = QPixmap('images/splash_screen.png')
-        # label.setPixmap(pixmap)
         image_widget = ImageWidget("images/splash_screen.png")
         v_layout = QVBoxLayout()
         h_layout = QHBoxLayout()
@@ -54,10 +54,39 @@ class IntercomUI(QMainWindow):
         timer.singleShot(time_ms, self.on_start_screen_end)
 
     def on_start_screen_end(self) -> None:
-        print("Trace: Start-screen end", time.time())
         clear_widget = QWidget()
         self.setCentralWidget(clear_widget)
-        # TODO construct actual Ui
+
+        menubar = self.setup_menu()
+        self.statusBar()
+        self.setMenuBar(menubar)
+
+    def setup_menu(self) -> QMenuBar:
+        """Create the menu of the main window"""
+        menubar = QMenuBar(self)
+        setting_menu = menubar.addMenu("Einstellungen")
+
+        # bell sound selection
+        bell_select_action = QAction("Klingelton", self)
+        bell_select_action.setStatusTip("Wähle einen Klingelton")
+        bell_select_action.triggered.connect(self.on_bell_select)
+        setting_menu.addAction(bell_select_action)
+
+        # volume settings
+        volume_setting_action = QAction("Lautstärke", self)
+        volume_setting_action.setStatusTip("Lautstärke ändern")
+        volume_setting_action.triggered.connect(self.on_volume_setting)
+        setting_menu.addAction(volume_setting_action)
+
+        return menubar
+
+    def on_bell_select(self):
+        """Handle menu action for bell sound selection"""
+        print("on_bell_select was triggered")
+
+    def on_volume_setting(self):
+        """Handle menu action for volume settings"""
+        print("on_volume_setting was triggered")
 
 
 def main():
@@ -65,6 +94,7 @@ def main():
     app = QApplication(sys.argv)
     main_window = IntercomUI()
     sys.exit(app.exec_())
+
 
 if __name__ == "__main__":
     main()
